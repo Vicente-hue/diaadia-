@@ -15,8 +15,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      transition: background-color 0.5s ease;
+      min-height: 100vh;
+      transition: background-color 0.6s ease;
       color: white;
       text-align: center;
       background-color: #1a1a2e;
@@ -34,7 +34,7 @@
 
     .emotion-button {
       margin: 10px;
-      padding: 20px 40px;
+      padding: 25px 40px;
       font-size: 2.5rem;
       border: none;
       border-radius: 15px;
@@ -60,10 +60,11 @@
     }
 
     .message {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       margin-bottom: 20px;
       font-style: italic;
       text-shadow: 1px 1px 3px #000;
+      max-width: 90%;
     }
 
     ul {
@@ -74,6 +75,11 @@
     li {
       margin: 12px 0;
       font-size: 1.2rem;
+    }
+
+    #encuesta p, #frase-extra p {
+      max-width: 85%;
+      margin: 20px auto;
     }
   </style>
 </head>
@@ -93,34 +99,36 @@
     <div class="menu">
       <h3>Cosas que podrías hacer:</h3>
       <ul id="sugerencias"></ul>
-      <button class="emotion-button" onclick="volver()">🔁</button>
+      <div id="encuesta"></div>
+      <div id="frase-extra"></div>
+      <button class="emotion-button" onclick="volver()">🔁 Volver al inicio</button>
     </div>
   </div>
 
   <script>
     function mostrarRespuesta(estado) {
       const fondos = {
-        horrible: "#301934",
-        mal: "#3b3f88",
-        masomenos: "#646464",
+        horrible: "#3a0a2a",
+        mal: "#3a3f88",
+        masomenos: "#666666",
         bien: "#2e8b57",
-        excelente: "#ff6f61"
+        excelente: "#f97316"
       };
 
       const mensajes = {
-        horrible: "Está bien no estar bien. Hoy puedes empezar de nuevo.",
-        mal: "Las emociones pasan. Respira, tómate tu tiempo.",
-        masomenos: "Ni bien ni mal está bien. Puedes mejorar tu día con algo pequeño.",
-        bien: "¡Qué bueno! Aprovecha este estado para hacer algo bonito.",
-        excelente: "¡Wow! Estás brillando hoy. Contágialo al mundo."
+        horrible: "Aunque hoy te sientas en el suelo, recuerda: no estás sol@, y cada día es una nueva oportunidad para levantarse. Incluso las tormentas más fuertes pasan.",
+        mal: "Hoy tal vez no tengas fuerzas para correr, pero caminar lento también es avanzar. Sé amable contigo, todo se acomoda con el tiempo.",
+        masomenos: "Estás en medio. Y eso también está bien. No te exijas tanto. Permítete sentir, permitirte existir así como estás, es valentía.",
+        bien: "¡Qué bueno que te sientes bien! Recuerda que incluso en los buenos días, cuidar de ti sigue siendo importante. ¡Haz algo que te llene el alma!",
+        excelente: "¡Estás brillando! Usa esa energía para ti y para los demás. Hoy es un gran día para dejar huella positiva en alguien más."
       };
 
       const sugerencias = {
-        horrible: ["🎵 Escucha tu música favorita.", "🎬 Mira una película que te guste.", "📞 Habla con alguien importante para ti.", "🚶 Da un pequeño paseo.", "📝 Escribe lo que sientes (libera mucho)."],
-        mal: ["🌬️ Haz respiraciones profundas.", "📺 Mira una serie tranquila.", "📚 Lee algo que te inspire.", "☕ Tómate algo calentito y reconfortante."],
-        masomenos: ["🍫 Come algo rico.", "🎨 Haz algo creativo aunque sea simple.", "📱 Manda un mensaje lindo a alguien.", "🧘 Estírate o medita 5 minutos."],
-        bien: ["💬 Habla con alguien que quieras.", "🏃 Haz ejercicio ligero.", "📷 Toma una foto de algo bonito.", "🎶 Pon música alegre y baila un rato."],
-        excelente: ["💌 Felicita a alguien solo porque sí.", "🎉 Haz algo creativo o loco.", "🎤 Canta en voz alta.", "🌟 Comparte tu buena vibra con otros."]
+        horrible: ["🎵 Escucha una canción que te traiga paz.", "📞 Habla con alguien que te entienda.", "📝 Escribe lo que sientes sin filtro.", "🚶 Da un paseo lento, respira profundo.", "💧 Llora si lo necesitas. Es liberación."],
+        mal: ["🧘 Haz una pausa para respirar 3 minutos.", "📺 Ve algo reconfortante.", "📚 Lee una frase que te inspire.", "☕ Toma algo calentito. Pequeños gestos reconfortan."],
+        masomenos: ["🍫 Date un gusto sin culpa.", "🎨 Haz algo creativo (aunque no te quede perfecto).", "📱 Habla con alguien que te haga bien.", "💬 Escribe tus pensamientos y despéjalos."],
+        bien: ["💬 Comparte tu alegría con alguien.", "🎶 Baila aunque estés sol@", "📷 Saca una foto de algo que te guste.", "🤝 Apoya a alguien que lo necesite."],
+        excelente: ["🎉 Celebra tu estado de ánimo.", "🌟 Agradece por lo que tienes hoy.", "🎤 Canta, grita o corre. Exprésate.", "💌 Deja una nota positiva a alguien."]
       };
 
       document.body.style.backgroundColor = fondos[estado];
@@ -137,12 +145,39 @@
 
       document.getElementById("inicio").classList.add("hidden");
       document.getElementById("respuesta").classList.remove("hidden");
+
+      mostrarEncuesta();
     }
 
     function volver() {
       document.getElementById("respuesta").classList.add("hidden");
       document.getElementById("inicio").classList.remove("hidden");
       document.body.style.backgroundColor = "#1a1a2e";
+      document.getElementById("frase-extra").innerHTML = "";
+      document.getElementById("encuesta").innerHTML = "";
+    }
+
+    function mostrarEncuesta() {
+      const contenedor = document.getElementById("encuesta");
+      contenedor.innerHTML = `
+        <p style="margin-top:30px;font-size:1.2rem;">¿Te ha ayudado este comentario?</p>
+        <button class="emotion-button" onclick="responderEncuesta('si')">😊 Sí</button>
+        <button class="emotion-button" onclick="responderEncuesta('poco')">😐 Un poco</button>
+        <button class="emotion-button" onclick="responderEncuesta('no')">😞 No</button>
+      `;
+    }
+
+    function responderEncuesta(respuesta) {
+      const frase = {
+        si: "¡Me alegra que sí! A veces, una palabra oportuna puede dar luz incluso en los días más grises. Gracias por darte este espacio. 💛",
+        poco: "Es totalmente válido. Cada pequeño paso cuenta. Que hoy no sea perfecto no significa que no haya valor. Te mereces amor, incluso cuando no lo sientas. 🌿",
+        no: "Gracias por ser sincer@. Si estás leyendo esto, significa que no te has rendido. Y eso, por sí solo, ya es un acto de valentía. 💪 No estás sol@."
+      };
+
+      document.getElementById("encuesta").innerHTML = "";
+      document.getElementById("frase-extra").innerHTML = `
+        <p style="font-size:1.2rem; font-style:italic;">${frase[respuesta]}</p>
+      `;
     }
   </script>
 </body>
