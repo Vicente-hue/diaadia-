@@ -1,155 +1,179 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pregunta con corazón animado</title>
+  <title>¿Quieres salir conmigo?</title>
   <style>
-    /* Reset y fondo */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html,body { height: 100%; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: radial-gradient(ellipse at bottom, #0b132b 0%, #060710 70%); color: #fff; }
+    :root{--bg:#0f172a;--card:#0b1220;--accent:#ff4d6d}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+    body{background: radial-gradient(closest-side, #1b2433 0%, #071024 60%), url('') center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:#e6eef8}
+    .stage{width:100%;max-width:900px;margin:32px;padding:28px;border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 10px 30px rgba(2,6,23,0.6);position:relative;overflow:hidden}
 
-    /* Contenedor central */
-    .container {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      padding: 2rem;
-      text-align: center;
-    }
+    /* big phone mockup */
+    .phone{
+      width:340px;height:640px;background:linear-gradient(180deg,#081226,#071123);border-radius:34px;margin:0 auto;padding:20px;box-shadow:0 12px 50px rgba(3,6,12,0.6) inset, 0 18px 40px rgba(2,8,20,0.6);position:relative;overflow:hidden}
 
-    /* Mensaje principal */
-    .message {
-      z-index: 5;
-      max-width: 900px;
-      width: 100%;
-    }
-    .title {
-      font-size: clamp(22px, 4.5vw, 48px);
-      font-weight: 700;
-      letter-spacing: 0.6px;
-      margin-bottom: 12px;
-      text-shadow: 0 6px 20px rgba(0,0,0,0.6);
-    }
-    .subtitle {
-      font-size: clamp(14px, 2.2vw, 18px);
-      opacity: .9;
-      margin-bottom: 24px;
-    }
+    .screen{position:relative;width:100%;height:100%;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 
-    /* Corazón animado (SVG dentro) */
-    .heart-wrap {
-      position: absolute;
-      z-index: 4;
-      pointer-events: none;
-      left: -15%;
-      top: 40%;
-      transform: translateY(-50%);
-      width: 120px;
-      height: 120px;
-      filter: drop-shadow(0 8px 30px rgba(255,0,85,0.15));
-      animation:
-        moveAcross 8s linear infinite,
-        floatY 3.6s ease-in-out infinite;
-    }
+    .message{font-size:28px;text-align:center;line-height:1.1;letter-spacing:0.4px;padding:0 18px;opacity:0;transform:translateY(20px);}
+    .message.show{opacity:1;transform:translateY(0);transition:all 650ms cubic-bezier(.2,.9,.3,1)}
 
-    /* Cuando haya pantallas muy pequeñas reducimos tamaño y velocidad */
-    @media (max-width: 420px) {
-      .heart-wrap { width: 86px; height: 86px; animation-duration: 7s, 3s; }
-    }
+    .typewriter{font-weight:700;color:var(--accent);font-size:34px}
 
-    /* Animación de latido aplicada al propio SVG */
-    .heart {
-      width: 100%;
-      height: 100%;
-      display: block;
-      animation: beat 1.1s ease-in-out infinite;
-      transform-origin: 50% 55%;
-    }
+    .sub{font-size:14px;color:#9fb0d8;margin-top:8px}
 
-    /* KEYFRAMES */
-    @keyframes beat {
-      0%   { transform: scale(1); }
-      25%  { transform: scale(1.08); }
-      45%  { transform: scale(0.98); }
-      70%  { transform: scale(1.06); }
-      100% { transform: scale(1); }
-    }
+    .btns{position:absolute;bottom:28px;left:0;right:0;display:flex;gap:16px;justify-content:center}
+    .btn{background:rgba(255,255,255,0.04);padding:10px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);cursor:pointer;backdrop-filter:blur(4px);}
+    .btn.accept{background:linear-gradient(90deg,#ff6b85,#ff4d6d);color:white;border:none}
+    .btn.decline{color:#b6d1ff}
 
-    @keyframes floatY {
-      0%   { transform: translateY(-2px); }
-      50%  { transform: translateY(8px); }
-      100% { transform: translateY(-2px); }
-    }
+    /* floating hearts */
+    .heart{position:absolute;width:44px;height:44px;left:50%;top:40%;transform:translate(-50%,-50%);pointer-events:none;opacity:0}
 
-    @keyframes moveAcross {
-      0%   { left: -20%; transform: translateY(-50%) scale(1); opacity: 0.95; }
-      40%  { left: 20%; transform: translateY(-50%) scale(1.05); opacity: 1; }
-      70%  { left: 60%; transform: translateY(-50%) scale(0.98); opacity: 0.95; }
-      100% { left: 120%; transform: translateY(-50%) scale(0.9); opacity: 0.6; }
-    }
+    /* little helper styles */
+    .credits{position:absolute;right:14px;top:14px;font-size:12px;color:#8fa6d6;opacity:.9}
 
-    /* Estrellas de fondo decorativas (pueden ajustarse) */
-    .stars, .stars::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.7) 50%, transparent 51%),
-        radial-gradient(1.4px 1.4px at 70% 40%, rgba(255,255,255,0.55) 50%, transparent 51%),
-        radial-gradient(1.6px 1.6px at 30% 80%, rgba(255,255,255,0.5) 50%, transparent 51%),
-        radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,0.45) 50%, transparent 51%);
-      background-size: cover;
-      opacity: 0.18;
-      z-index: 0;
-      mix-blend-mode: screen;
-    }
+    /* confetti canvas covers phone */
+    canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 
-    /* Pequeña nota */
-    .note { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 14px; }
-
+    @media (max-width:480px){.phone{width:300px;height:580px}.message{font-size:22px}.typewriter{font-size:28px}}
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="stars" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="credits">Generado con ❤️</div>
 
-    <div class="message" role="main" aria-live="polite">
-      <!-- Aquí se muestra el texto que pediste -->
-      <div class="title">¿Quieres salir conmigo?</div>
-      <div class="subtitle">Pulsa el corazón si la respuesta es sí ❤️</div>
-      <div class="note">(Animación del corazón móvil / flotante / con latido)</div>
-    </div>
+    <div class="phone" id="phone">
+      <canvas id="confetti"></canvas>
+      <div class="screen">
+        <div class="message" id="intro">Hola 😳</div>
+        <div class="message typewriter" id="main">quieres salir conmigo?</div>
+        <div class="sub" id="hint">(Toca una opción)</div>
 
-    <!-- Corazón animado (SVG). Cambia atributos si quieres otro tamaño/color -->
-    <div class="heart-wrap" aria-hidden="true">
-      <svg class="heart" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="corazón">
+        <div class="btns" id="buttons" style="display:none;">
+          <button class="btn decline" id="noBtn">Lo siento, no</button>
+          <button class="btn accept" id="yesBtn">Sí, por supuesto</button>
+        </div>
+
+      </div>
+      <svg class="heart" id="floatingHeart" viewBox="0 0 24 24">
+        <path fill="url(#g)" d="M12.1 21.35l-1.1-1.01C5.14 15.36 2 12.28 2 8.5 2 6 3.99 4 6.5 4c1.74 0 3.41.81 4.5 2.09C12.09 4.81 13.76 4 15.5 4 18.01 4 20 6 20 8.5c0 3.78-3.14 6.86-8.9 11.84l-1 1.01z"/>
         <defs>
-          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0" stop-color="#ff6ea4"/>
-            <stop offset="1" stop-color="#ff2d6b"/>
+          <linearGradient id="g" x1="0" x2="1">
+            <stop offset="0" stop-color="#ff7a9a" />
+            <stop offset="1" stop-color="#ff3b6b" />
           </linearGradient>
         </defs>
-        <path fill="url(#g)" d="M471.7 73.3c-54.9-46.5-136-38.7-185.6 13.3L256 116 225.9 86.6C176.4 33.6 95.3 25.8 40.4 72.3 -26 131.8 12.3 236.6 85.7 310.7L256 482l170.3-171.3c73.4-74.1 111.7-178.9 45.4-237.4z"/>
       </svg>
     </div>
-
   </div>
 
   <script>
-    // Si quieres que el texto cambie dinámicamente por JS, aquí hay un ejemplo simple:
-    // document.querySelector('.title').textContent = '¿Quieres salir conmigo?';
+    // Simple timeline: show intro -> typewriter text -> show buttons -> heart/confetti on yes
+    const intro = document.getElementById('intro');
+    const main = document.getElementById('main');
+    const buttons = document.getElementById('buttons');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const heart = document.getElementById('floatingHeart');
+    const confettiCanvas = document.getElementById('confetti');
 
-    // (En caso de que quieras detener la animación al tocar el corazón en móviles,
-    //  podrías añadir un listener y pausar las animaciones cambiando clases.)
-    // Ejemplo: detener animación al tocar
-    const heartWrap = document.querySelector('.heart-wrap');
-    heartWrap.addEventListener('click', () => {
-      heartWrap.style.animationPlayState = heartWrap.style.animationPlayState === 'paused' ? 'running' : 'paused';
+    function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+    async function start(){
+      intro.classList.add('show');
+      await wait(900);
+      intro.classList.remove('show');
+      // typewriter effect for main text
+      const text = main.textContent.trim();
+      main.textContent = '';
+      main.classList.add('show');
+      for(let i=0;i<text.length;i++){
+        main.textContent += text[i];
+        await wait(80 + Math.random()*30);
+      }
+      await wait(350);
+      buttons.style.display = 'flex';
+    }
+
+    start();
+
+    // floating heart animation
+    function burstHeart(){
+      heart.style.left = (30 + Math.random()*40) + '%';
+      heart.style.top = (30 + Math.random()*40) + '%';
+      heart.style.opacity = 1;
+      heart.style.transform = 'translate(-50%,-50%) scale(0.6)';
+      heart.animate([
+        {transform:'translate(-50%,-50%) scale(0.6)', opacity:1},
+        {transform:'translate(-50%,-150%) scale(1.2)', opacity:0}
+      ], {duration:1200, easing:'cubic-bezier(.2,.9,.3,1)'});
+    }
+
+    yesBtn.addEventListener('click', ()=>{
+      burstHeart();
+      launchConfetti();
+      yesBtn.textContent = '¡Genial! 🎉';
+      noBtn.style.display = 'none';
+      hintFade('¡Me encantaría!');
     });
+
+    noBtn.addEventListener('click', ()=>{
+      burstHeart();
+      noBtn.textContent = 'Está bien 😅';
+      yesBtn.style.display = 'none';
+      hintFade('Gracias por la sinceridad');
+    });
+
+    function hintFade(text){
+      const hint = document.getElementById('hint');
+      hint.style.opacity = 0;
+      setTimeout(()=>{hint.textContent = text; hint.style.opacity = 1},300);
+    }
+
+    // Confetti implementation (lightweight)
+    function launchConfetti(){
+      const w = confettiCanvas.width = confettiCanvas.offsetWidth;
+      const h = confettiCanvas.height = confettiCanvas.offsetHeight;
+      const ctx = confettiCanvas.getContext('2d');
+      const pieces = [];
+      for(let i=0;i<90;i++){
+        pieces.push({
+          x: w/2 + (Math.random()-0.5)*200,
+          y: h/2 + (Math.random()-0.7)*60,
+          vx: (Math.random()-0.5)*6,
+          vy: (Math.random()*-6)-2,
+          r: 6+Math.random()*8,
+          rot: Math.random()*360,
+          s: 1+Math.random()*0.8
+        });
+      }
+      let t0 = null;
+      function frame(ts){
+        if(!t0) t0 = ts;
+        const dt = (ts-t0)/1000; t0 = ts;
+        ctx.clearRect(0,0,w,h);
+        for(let p of pieces){
+          p.vy += 9.8*dt; p.x += p.vx*dt*60; p.y += p.vy*dt*60; p.rot += p.vx*dt*12;
+          ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+          ctx.fillStyle = `hsl(${Math.floor(340+Math.random()*40)},80%,60%)`;
+          ctx.fillRect(-p.r*p.s/2, -p.r*p.s/2, p.r*p.s, p.r*p.s);
+          ctx.restore();
+        }
+        // stop when many pieces below
+        if(pieces.some(p=>p.y < h+60)) requestAnimationFrame(frame);
+        else ctx.clearRect(0,0,w,h);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    // Make canvas resize correctly on device rotate
+    window.addEventListener('resize', ()=>{
+      confettiCanvas.width = confettiCanvas.offsetWidth;
+      confettiCanvas.height = confettiCanvas.offsetHeight;
+    });
+
   </script>
 </body>
 </html>
