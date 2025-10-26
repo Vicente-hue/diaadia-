@@ -1,0 +1,112 @@
+body {
+    background-color: #000; /* Fondo negro como el video */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Oculta barras de desplazamiento si las partículas salen */
+    font-family: 'Arial', sans-serif;
+}
+
+.heart-container {
+    position: relative;
+    z-index: 10; /* Asegura que el corazón esté por encima de las partículas */
+    text-align: center;
+}
+
+.heart {
+    position: relative;
+    width: 200px; /* Tamaño base del corazón */
+    height: 180px;
+    background-color: #ff007f; /* Color rosa/rojo vibrante */
+    transform: rotate(-45deg);
+    box-shadow: 0 0 50px rgba(255, 0, 127, 0.8); /* Brillo */
+    animation: pulse 1.5s infinite alternate; /* Animación de latido */
+    margin: 50px auto;
+}
+
+/* Pseudo-elementos para las curvas del corazón */
+.heart::before,
+.heart::after {
+    content: "";
+    position: absolute;
+    width: 200px;
+    height: 180px;
+    background-color: #ff007f;
+    border-radius: 50%;
+}
+
+.heart::before {
+    top: -90px;
+    left: 0;
+}
+
+.heart::after {
+    top: 0;
+    left: 90px;
+}
+
+/* Estilos para el texto dentro del corazón */
+.message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg); /* Desrota el texto */
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    width: 150%;
+    line-height: 1.2;
+    padding: 10px;
+}
+
+.sub-message {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    color: #ffcce0;
+    font-size: 0.9em;
+    width: 150%;
+}
+
+/* Animación de latido */
+@keyframes pulse {
+    0% { transform: rotate(-45deg) scale(1); }
+    100% { transform: rotate(-45deg) scale(1.05); }
+}
+
+/* Estilos para el contenedor de partículas/confeti */
+#confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Permite hacer clic en elementos debajo */
+    z-index: 5;
+}
+
+.confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: white; /* Partículas blancas */
+    border-radius: 50%;
+    opacity: 0;
+    animation: fall 5s ease-in infinite;
+}
+
+/* Animación de caída y desvanecimiento de las partículas */
+@keyframes fall {
+    0% {
+        transform: translateY(-10vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
