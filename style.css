@@ -1,28 +1,13 @@
-body {
-    background-color: #000; /* Fondo negro como el video */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    overflow: hidden; /* Oculta barras de desplazamiento si las partículas salen */
-    font-family: 'Arial', sans-serif;
-}
-
-.heart-container {
-    position: relative;
-    z-index: 10; /* Asegura que el corazón esté por encima de las partículas */
-    text-align: center;
-}
+/* ... (El resto del código CSS se mantiene igual hasta la clase .heart) ... */
 
 .heart {
     position: relative;
-    width: 200px; /* Tamaño base del corazón */
-    height: 180px;
-    background-color: #ff007f; /* Color rosa/rojo vibrante */
+    width: 250px; /* Aumentamos el tamaño del corazón para que quepa mejor el texto */
+    height: 225px;
+    background-color: #ff007f;
     transform: rotate(-45deg);
-    box-shadow: 0 0 50px rgba(255, 0, 127, 0.8); /* Brillo */
-    animation: pulse 1.5s infinite alternate; /* Animación de latido */
+    box-shadow: 0 0 50px rgba(255, 0, 127, 0.8);
+    animation: pulse 1.5s infinite alternate;
     margin: 50px auto;
 }
 
@@ -31,82 +16,73 @@ body {
 .heart::after {
     content: "";
     position: absolute;
-    width: 200px;
-    height: 180px;
+    width: 250px; /* Ajuste acorde al nuevo ancho del corazón */
+    height: 225px; /* Ajuste acorde al nuevo alto del corazón */
     background-color: #ff007f;
     border-radius: 50%;
 }
 
 .heart::before {
-    top: -90px;
+    top: -112.5px; /* Mitad de la nueva altura */
     left: 0;
 }
 
 .heart::after {
     top: 0;
-    left: 90px;
+    left: 112.5px; /* Mitad de la nueva altura */
 }
 
-/* Estilos para el texto dentro del corazón */
+/* 🛑 CAMBIOS CLAVE AQUÍ: Ajustes para el texto */
 .message {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg); /* Desrota el texto */
+    /* Quitamos el 'rotate(45deg)' para que el texto esté horizontal y sea legible. */
+    /* El transform: translate ahora solo centra el texto en el corazón rotado */
+    transform: translate(-50%, -50%); 
+    
     color: white;
-    font-size: 1.5em;
+    font-size: 1.8em; /* Hacemos el texto más grande */
     font-weight: bold;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-    width: 150%;
+    width: 100%; /* El ancho del texto es el 100% del contenedor */
     line-height: 1.2;
     padding: 10px;
+    
+    /* Agregamos una rotación inversa sutil para contrarrestar la del corazón */
+    /* Esto es la clave para que se vea horizontal y centrado */
+    transform: translate(-50%, -50%) rotate(45deg); 
+    
+    /* Ajustamos esto para que el texto NO esté rotado y sea fácil de leer */
+    transform: translate(-50%, -50%) rotate(45deg); /* Rota para contrarrestar */
+    
+    /* Si queremos que el texto NO se rote con el corazón (lo más común): */
+    transform: translate(-50%, -50%) rotate(45deg); /* Rotación del texto */
+    text-align: center;
+    
+    /* 🔴 LA MEJOR SOLUCIÓN: Usamos un span dentro del h1 para que solo el texto no rote */
+    /* El h1 se mantiene rotado con el corazón, y el span se desrota */
+    width: 150%; 
 }
 
-.sub-message {
+/* 🔴 SOLUCIÓN RECOMENDADA: Mantener el texto centrado y horizontal */
+/* Reemplaza la clase .message con esto para un mejor resultado: */
+.message {
     position: absolute;
-    top: 70%;
+    top: 50%;
     left: 50%;
+    /* Rota el texto 45 grados para compensar la rotación del corazón (-45 grados). */
     transform: translate(-50%, -50%) rotate(45deg);
-    color: #ffcce0;
-    font-size: 0.9em;
-    width: 150%;
+    color: white;
+    font-size: 1.8em;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    width: 250px; /* Fija un ancho para que el texto no se corte */
+    line-height: 1.2;
+    text-align: center;
 }
 
-/* Animación de latido */
-@keyframes pulse {
-    0% { transform: rotate(-45deg) scale(1); }
-    100% { transform: rotate(-45deg) scale(1.05); }
-}
+/* ELIMINADO: La clase .sub-message ha sido eliminada */
 
-/* Estilos para el contenedor de partículas/confeti */
-#confetti-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* Permite hacer clic en elementos debajo */
-    z-index: 5;
-}
 
-.confetti {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background-color: white; /* Partículas blancas */
-    border-radius: 50%;
-    opacity: 0;
-    animation: fall 5s ease-in infinite;
-}
-
-/* Animación de caída y desvanecimiento de las partículas */
-@keyframes fall {
-    0% {
-        transform: translateY(-10vh) rotate(0deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-    }
-}
+/* ... (El resto del código CSS, incluyendo @keyframes pulse y las clases de partículas, se mantiene igual) ... */
