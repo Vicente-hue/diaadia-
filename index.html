@@ -1,184 +1,155 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>¿Cómo te sientes hoy?</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pregunta con corazón animado</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+    /* Reset y fondo */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body { height: 100%; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: radial-gradient(ellipse at bottom, #0b132b 0%, #060710 70%); color: #fff; }
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Quicksand', sans-serif;
+    /* Contenedor central */
+    .container {
+      min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      transition: background-color 0.6s ease;
-      color: white;
+      position: relative;
+      overflow: hidden;
+      padding: 2rem;
       text-align: center;
-      background-color: #1a1a2e;
     }
 
-    .hidden {
-      display: none;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      text-shadow: 2px 2px 5px #000;
-    }
-
-    .emotion-button {
-      margin: 10px;
-      padding: 25px 40px;
-      font-size: 2.5rem;
-      border: none;
-      border-radius: 15px;
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-      transition: transform 0.2s, background-color 0.3s;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-      backdrop-filter: blur(5px);
-    }
-
-    .emotion-button:hover {
-      background-color: rgba(255, 255, 255, 0.3);
-      transform: scale(1.1);
-    }
-
-    .emotion-button:active {
-      transform: scale(0.95);
-    }
-
-    .menu {
-      margin-top: 30px;
-    }
-
+    /* Mensaje principal */
     .message {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      font-style: italic;
-      text-shadow: 1px 1px 3px #000;
-      max-width: 90%;
+      z-index: 5;
+      max-width: 900px;
+      width: 100%;
+    }
+    .title {
+      font-size: clamp(22px, 4.5vw, 48px);
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      margin-bottom: 12px;
+      text-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    }
+    .subtitle {
+      font-size: clamp(14px, 2.2vw, 18px);
+      opacity: .9;
+      margin-bottom: 24px;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
+    /* Corazón animado (SVG dentro) */
+    .heart-wrap {
+      position: absolute;
+      z-index: 4;
+      pointer-events: none;
+      left: -15%;
+      top: 40%;
+      transform: translateY(-50%);
+      width: 120px;
+      height: 120px;
+      filter: drop-shadow(0 8px 30px rgba(255,0,85,0.15));
+      animation:
+        moveAcross 8s linear infinite,
+        floatY 3.6s ease-in-out infinite;
     }
 
-    li {
-      margin: 12px 0;
-      font-size: 1.2rem;
+    /* Cuando haya pantallas muy pequeñas reducimos tamaño y velocidad */
+    @media (max-width: 420px) {
+      .heart-wrap { width: 86px; height: 86px; animation-duration: 7s, 3s; }
     }
 
-    #encuesta p, #frase-extra p {
-      max-width: 85%;
-      margin: 20px auto;
+    /* Animación de latido aplicada al propio SVG */
+    .heart {
+      width: 100%;
+      height: 100%;
+      display: block;
+      animation: beat 1.1s ease-in-out infinite;
+      transform-origin: 50% 55%;
     }
+
+    /* KEYFRAMES */
+    @keyframes beat {
+      0%   { transform: scale(1); }
+      25%  { transform: scale(1.08); }
+      45%  { transform: scale(0.98); }
+      70%  { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes floatY {
+      0%   { transform: translateY(-2px); }
+      50%  { transform: translateY(8px); }
+      100% { transform: translateY(-2px); }
+    }
+
+    @keyframes moveAcross {
+      0%   { left: -20%; transform: translateY(-50%) scale(1); opacity: 0.95; }
+      40%  { left: 20%; transform: translateY(-50%) scale(1.05); opacity: 1; }
+      70%  { left: 60%; transform: translateY(-50%) scale(0.98); opacity: 0.95; }
+      100% { left: 120%; transform: translateY(-50%) scale(0.9); opacity: 0.6; }
+    }
+
+    /* Estrellas de fondo decorativas (pueden ajustarse) */
+    .stars, .stars::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.7) 50%, transparent 51%),
+        radial-gradient(1.4px 1.4px at 70% 40%, rgba(255,255,255,0.55) 50%, transparent 51%),
+        radial-gradient(1.6px 1.6px at 30% 80%, rgba(255,255,255,0.5) 50%, transparent 51%),
+        radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,0.45) 50%, transparent 51%);
+      background-size: cover;
+      opacity: 0.18;
+      z-index: 0;
+      mix-blend-mode: screen;
+    }
+
+    /* Pequeña nota */
+    .note { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 14px; }
+
   </style>
 </head>
 <body>
-  <div id="inicio">
-    <h1>¿Cómo te sientes hoy?</h1>
-    <button class="emotion-button" onclick="mostrarRespuesta('horrible')">😢</button>
-    <button class="emotion-button" onclick="mostrarRespuesta('mal')">🙁</button>
-    <button class="emotion-button" onclick="mostrarRespuesta('masomenos')">😐</button>
-    <button class="emotion-button" onclick="mostrarRespuesta('bien')">🙂</button>
-    <button class="emotion-button" onclick="mostrarRespuesta('excelente')">😄</button>
-  </div>
+  <div class="container">
+    <div class="stars" aria-hidden="true"></div>
 
-  <div id="respuesta" class="hidden">
-    <h1 id="estado"></h1>
-    <p class="message" id="mensaje"></p>
-    <div class="menu">
-      <h3>Cosas que podrías hacer:</h3>
-      <ul id="sugerencias"></ul>
-      <div id="encuesta"></div>
-      <div id="frase-extra"></div>
-      <button class="emotion-button" onclick="volver()">🔁 Volver al inicio</button>
+    <div class="message" role="main" aria-live="polite">
+      <!-- Aquí se muestra el texto que pediste -->
+      <div class="title">¿Quieres salir conmigo?</div>
+      <div class="subtitle">Pulsa el corazón si la respuesta es sí ❤️</div>
+      <div class="note">(Animación del corazón móvil / flotante / con latido)</div>
     </div>
+
+    <!-- Corazón animado (SVG). Cambia atributos si quieres otro tamaño/color -->
+    <div class="heart-wrap" aria-hidden="true">
+      <svg class="heart" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="corazón">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#ff6ea4"/>
+            <stop offset="1" stop-color="#ff2d6b"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#g)" d="M471.7 73.3c-54.9-46.5-136-38.7-185.6 13.3L256 116 225.9 86.6C176.4 33.6 95.3 25.8 40.4 72.3 -26 131.8 12.3 236.6 85.7 310.7L256 482l170.3-171.3c73.4-74.1 111.7-178.9 45.4-237.4z"/>
+      </svg>
+    </div>
+
   </div>
 
   <script>
-    function mostrarRespuesta(estado) {
-      const fondos = {
-        horrible: "#3a0a2a",
-        mal: "#3a3f88",
-        masomenos: "#666666",
-        bien: "#2e8b57",
-        excelente: "#f97316"
-      };
+    // Si quieres que el texto cambie dinámicamente por JS, aquí hay un ejemplo simple:
+    // document.querySelector('.title').textContent = '¿Quieres salir conmigo?';
 
-      const mensajes = {
-        horrible: "Aunque hoy te sientas en el suelo, recuerda: no estás sol@, y cada día es una nueva oportunidad para levantarse. Incluso las tormentas más fuertes pasan.",
-        mal: "Hoy tal vez no tengas fuerzas para correr, pero caminar lento también es avanzar. Sé amable contigo, todo se acomoda con el tiempo.",
-        masomenos: "Estás en medio. Y eso también está bien. No te exijas tanto. Permítete sentir, permitirte existir así como estás, es valentía.",
-        bien: "¡Qué bueno que te sientes bien! Recuerda que incluso en los buenos días, cuidar de ti sigue siendo importante. ¡Haz algo que te llene el alma!",
-        excelente: "¡Estás brillando! Usa esa energía para ti y para los demás. Hoy es un gran día para dejar huella positiva en alguien más."
-      };
-
-      const sugerencias = {
-        horrible: ["🎵 Escucha una canción que te traiga paz.", "📞 Habla con alguien que te entienda.", "📝 Escribe lo que sientes sin filtro.", "🚶 Da un paseo lento, respira profundo.", "💧 Llora si lo necesitas. Es liberación."],
-        mal: ["🧘 Haz una pausa para respirar 3 minutos.", "📺 Ve algo reconfortante.", "📚 Lee una frase que te inspire.", "☕ Toma algo calentito. Pequeños gestos reconfortan."],
-        masomenos: ["🍫 Date un gusto sin culpa.", "🎨 Haz algo creativo (aunque no te quede perfecto).", "📱 Habla con alguien que te haga bien.", "💬 Escribe tus pensamientos y despéjalos."],
-        bien: ["💬 Comparte tu alegría con alguien.", "🎶 Baila aunque estés sol@", "📷 Saca una foto de algo que te guste.", "🤝 Apoya a alguien que lo necesite."],
-        excelente: ["🎉 Celebra tu estado de ánimo.", "🌟 Agradece por lo que tienes hoy.", "🎤 Canta, grita o corre. Exprésate.", "💌 Deja una nota positiva a alguien."]
-      };
-
-      document.body.style.backgroundColor = fondos[estado];
-      document.getElementById("estado").textContent = `Te sientes ${estado.toUpperCase()}`;
-      document.getElementById("mensaje").textContent = mensajes[estado];
-
-      const lista = document.getElementById("sugerencias");
-      lista.innerHTML = "";
-      sugerencias[estado].forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        lista.appendChild(li);
-      });
-
-      document.getElementById("inicio").classList.add("hidden");
-      document.getElementById("respuesta").classList.remove("hidden");
-
-      mostrarEncuesta();
-    }
-
-    function volver() {
-      document.getElementById("respuesta").classList.add("hidden");
-      document.getElementById("inicio").classList.remove("hidden");
-      document.body.style.backgroundColor = "#1a1a2e";
-      document.getElementById("frase-extra").innerHTML = "";
-      document.getElementById("encuesta").innerHTML = "";
-    }
-
-    function mostrarEncuesta() {
-      const contenedor = document.getElementById("encuesta");
-      contenedor.innerHTML = `
-        <p style="margin-top:30px;font-size:1.2rem;">¿Te ha ayudado este comentario?</p>
-        <button class="emotion-button" onclick="responderEncuesta('si')">😊 Sí</button>
-        <button class="emotion-button" onclick="responderEncuesta('poco')">😐 Un poco</button>
-        <button class="emotion-button" onclick="responderEncuesta('no')">😞 No</button>
-      `;
-    }
-
-    function responderEncuesta(respuesta) {
-      const frase = {
-        si: "¡Me alegra que sí! A veces, una palabra oportuna puede dar luz incluso en los días más grises. Gracias por darte este espacio. 💛",
-        poco: "Es totalmente válido. Cada pequeño paso cuenta. Que hoy no sea perfecto no significa que no haya valor. Te mereces amor, incluso cuando no lo sientas. 🌿",
-        no: "Gracias por ser sincer@. Si estás leyendo esto, significa que no te has rendido. Y eso, por sí solo, ya es un acto de valentía. 💪 No estás sol@."
-      };
-
-      document.getElementById("encuesta").innerHTML = "";
-      document.getElementById("frase-extra").innerHTML = `
-        <p style="font-size:1.2rem; font-style:italic;">${frase[respuesta]}</p>
-      `;
-    }
+    // (En caso de que quieras detener la animación al tocar el corazón en móviles,
+    //  podrías añadir un listener y pausar las animaciones cambiando clases.)
+    // Ejemplo: detener animación al tocar
+    const heartWrap = document.querySelector('.heart-wrap');
+    heartWrap.addEventListener('click', () => {
+      heartWrap.style.animationPlayState = heartWrap.style.animationPlayState === 'paused' ? 'running' : 'paused';
+    });
   </script>
 </body>
 </html>
